@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="E:/SQL/0403/History Department.sqlite3" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="150"/><column_width id="3" width="1080"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainmentor"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">-- Drop tables if they exist
+DROP TABLE IF EXISTS Enrollment;
+DROP TABLE IF EXISTS Payment;
+DROP TABLE IF EXISTS Mentor;
+DROP TABLE IF EXISTS Course;
+DROP TABLE IF EXISTS Member;
+DROP TABLE IF EXISTS Equipment;
+
+-- Create Member Table
+CREATE TABLE Member (
+    MemberID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100),
+    Phone VARCHAR(20),
+    YearOfBirth DATE,
+    MembershipType VARCHAR(50)
+);
+
+-- Create Mentor Table
+CREATE TABLE Mentor (
+    InstructorID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100),
+    Phone VARCHAR(20),
+    Specialization VARCHAR(100),
+    Credit DECIMAL(10, 2)
+);
+
+-- Create Course Table
+CREATE TABLE Course (
+    CourseID INTEGER PRIMARY KEY AUTOINCREMENT ,
+    CourseName VARCHAR(100) NOT NULL,
+    InstructorID INT,
+    ClassRoomID INT, 
+    Fee DECIMAL(10, 2),
+    FOREIGN KEY (InstructorID) REFERENCES Mentor(InstructorID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Create Enrollment Table
+CREATE TABLE Enrollment (
+    EnrollmentID INTEGER PRIMARY KEY AUTOINCREMENT,
+    MemberID INT,
+    CourseID INT,
+    EnrollmentDate DATE,
+    FOREIGN KEY (MemberID) REFERENCES Member(MemberID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Create Payment Table
+CREATE TABLE Payment (
+    PaymentID INTEGER PRIMARY KEY AUTOINCREMENT,
+	CourseID INT,
+	MemberID INT,
+    EnrollmentID INT,
+    PaymentDate DATE,
+    Amount DECIMAL(10, 2),
+    PaymentMethod VARCHAR(50),	
+	
+    FOREIGN KEY (EnrollmentID) REFERENCES Enrollment(EnrollmentID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Member(MemberID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- Create Equipment Table
+CREATE TABLE Equipment (
+    EquipmentID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EquipmentName VARCHAR(100) NOT NULL,
+    Quantity INT,
+    Condition VARCHAR(50),
+    ClassRoomID INT
+);
+
+
+-- Mentor table
+INSERT INTO Mentor (Name, Email, Phone, Specialization)
+VALUES
+  ('Socrates', 'socrates@philosophy.gr', '+30 123 4567xx', 'Ethics'),
+  ('Plato', 'plato@philosophy.gr', '+30 234 5678xx', 'Metaphysics'),
+  ('Aristotle', 'aristotle@philosophy.gr', '+30 345 6789xx', 'Logic'),
+  ('Seneca', 'seneca@philosophy.rome', '+39 456 7890xx', 'Stoicism'),
+  ('Marcus Aurelius', 'marcus@philosophy.rome', '+39 567 8901xx', 'Meditations');
+
+-- Members table
+  INSERT INTO Member (Name, Email, Phone, YearOfBirth, MembershipType)
+VALUES
+    ('Achilles', 'achilles@emp.it', '+39 123456701', 1978, 'Standard'),
+    ('Hercules', 'hercules@emp.it', '+39 123456702', 1965, 'Standard'),
+    ('Perseus', 'perseus@emp.it', '+39 123456703', 1983, 'Standard'),
+    ('Aeneas', 'aeneas@emp.it', '+39 123456704', 1972, 'Standard'),
+    ('Hector', 'hector@emp.it', '+39 123456705', 1958, 'Standard'),
+    ('Jason', 'jason@emp.it', '+39 123456706', 1990, 'Standard'),
+    ('Odysseus', 'odysseus@emp.it', '+39 123456707', 1987, 'Standard'),
+    ('Pericles', 'pericles@emp.it', '+39 123456708', 1976, 'Standard'),
+    ('Leonidas', 'leonidas@emp.it', '+39 123456709', 1985, 'Standard'),
+    ('Julius', 'julius@emp.it', '+39 123456710', 1969, 'Standard'),
+    ('Cicero', 'cicero@emp.it', '+39 123456711', 1955, 'Standard'),
+    ('Augustus', 'augustus@emp.it', '+39 123456712', 1990, 'Standard'),
+    ('Tiberius', 'tiberius@emp.it', '+39 123456713', 1987, 'Standard'),
+    ('Nero', 'nero@emp.it', '+39 123456714', 1979, 'Standard'),
+    ('Virgil', 'virgil@emp.it', '+39 123456715', 1974, 'Standard'),
+    ('Horace', 'horace@emp.it', '+39 123456716', 1983, 'Standard'),
+    ('Ovid', 'ovid@emp.it', '+39 123456717', 1970, 'Standard'),
+    ('Seneca', 'seneca@emp.it', '+39 123456718', 1989, 'Standard'),
+    ('Plato', 'plato@emp.it', '+39 123456719', 1956, 'Standard'),
+    ('Aristotle', 'aristotle@emp.it', '+39 123456720', 1997, 'Standard'),
+    ('Socrates', 'socrates@emp.it', '+39 123456721', 1952, 'Standard'),
+    ('Pythagoras', 'pythagoras@emp.it', '+39 123456722', 1986, 'Standard'),
+    ('Euclid', 'euclid@emp.it', '+39 123456723', 1970, 'Standard'),
+    ('Marcus', 'marcus@emp.it', '+39 123456724', 1957, 'Standard'),
+    ('Cato', 'cato@emp.it', '+39 123456725', 1994, 'Standard');
+
+
+ -- Courses TABLE
+ INSERT INTO Course (CourseName, InstructorID, ClassRoomID, Fee)
+  VALUES
+('The Great Emu War',5,4,330),
+('The Great Molasses Flood',1,1,220),
+('The War of Jenkins Ear',1,2,550),
+('The Pig War',2,2,450),
+('The Great Stork Derby',3, 2, 600),
+('The London Beer Flood',4,1,480),
+('The Battle of the Frogs',5,4,380),
+('The Dancing Plague of 1518',1,3,700);
+
+
+	-- Enrollments Table 
+ INSERT INTO Enrollment (MemberID, CourseID, EnrollmentDate)
+VALUES	
+(1, 5, '2024-02-17'),
+(2, 3, '2024-05-12'),
+(2, 6, '2024-06-28'),
+(2, 7, '2024-10-03'),
+(3, 1, '2024-07-09'),
+(3, 4, '2024-10-29'),
+(4, 2, '2024-09-05'),
+(4, 3, '2024-11-24'),
+(5, 4, '2024-06-18'),
+(5, 5, '2024-10-21'),
+(5, 6, '2024-12-04'),
+(6, 2, '2024-02-19'),
+(7, 1, '2024-06-01'),
+(8, 3, '2024-08-05'),
+(9, 3, '2024-06-14'),
+(9, 6, '2024-08-02'),
+(10, 3, '2024-04-30'),
+(10, 7, '2024-07-27'),
+(11, 1, '2024-08-18'),
+(11, 4, '2024-11-05'),
+(11, 7, '2024-11-26'),
+(12, 2, '2024-08-29'),
+(12, 5, '2024-10-05'),
+(13, 5, '2024-08-11'),
+(14, 2, '2024-07-18'),
+(14, 6, '2024-11-17'),
+(15, 5, '2024-04-25'),
+(16, 1, '2024-01-25'),
+(16, 4, '2024-05-19'),
+(17, 3, '2024-02-01'),
+(17, 6, '2024-02-20'),
+(17, 7, '2024-07-22'),
+(18, 3, '2024-08-30'),
+(18, 4, '2024-10-27'),
+(18, 5, '2024-11-08'),
+(19, 1, '2024-06-15'),
+(19, 2, '2024-09-25'),
+(20, 1, '2024-06-22'),
+(20, 6, '2024-08-04'),
+(21, 2, '2024-02-15'),
+(21, 6, '2024-04-07'),
+(22, 2, '2024-04-04'),
+(22, 3, '2024-06-06'),
+(22, 7, '2024-10-19'),
+(23, 1, '2024-02-11'),
+(24, 1, '2024-05-06'),
+(24, 3, '2024-08-22'),
+(24, 5, '2024-09-28'),
+(25, 2, '2024-03-10'),
+(25, 3, '2024-03-29'),
+(25, 4, '2024-06-26');
+
+-- Payment Tablet
+INSERT INTO Payment (EnrollmentID, CourseID, MemberID, PaymentDate, Amount, PaymentMethod)
+VALUES
+(1, 1, 1, '2024-02-20', 220.00, 'Cash'),
+(2, 3, 2, '2024-05-15', 480.00, 'Transfered'),
+(3, 6, 2, '2024-06-30', 550.00, 'Paypal'),
+(4, 7, 2, '2024-10-05', 450.00, 'Unseccessful'),
+(5, 1, 3, '2024-07-12', 220.00, 'Cash'),
+(6, 4, 3, '2024-11-01', 450.00, 'Transfered'),
+(7, 2, 4, '2024-09-08', 480.00, 'Paypal'),
+(8, 3, 4, '2024-11-27', 550.00, 'Unseccessful'),
+(9, 4, 5, '2024-06-21', 450.00, 'Cash'),
+(10, 5, 5, '2024-10-24', 600.00, 'Transfered'),
+(11, 6, 5, '2024-12-07', 700.00, 'Paypal'),
+(12, 3, 6, '2024-02-22', 480.00, 'Cash'),
+(13, 1, 7, '2024-06-04', 220.00, 'Transfered'),
+(14, 4, 8, '2024-08-08', 550.00, 'Paypal'),
+(15, 4, 9, '2024-06-17', 550.00, 'Unseccessful'),
+(16, 6, 9, '2024-08-04', 700.00, 'Cash'),
+(17, 4, 10, '2024-05-02', 550.00, 'Transfered'),
+(18, 7, 10, '2024-07-29', 330.00, 'Paypal'),
+(19, 1, 11, '2024-08-21', 220.00, 'Unseccessful'),
+(20, 5, 11, '2024-11-08', 450.00, 'Cash'),
+(21, 7, 11, '2024-11-29', 330.00, 'Transfered'),
+(22, 3, 12, '2024-09-01', 480.00, 'Paypal'),
+(23, 6, 12, '2024-10-07', 600.00, 'Unseccessful'),
+(24, 5, 13, '2024-08-14', 600.00, 'Cash'),
+(25, 3, 14, '2024-07-21', 480.00, 'Transfered'),
+(26, 6, 14, '2024-11-20', 700.00, 'Paypal'),
+(27, 5, 15, '2024-04-27', 600.00, 'Cash'),
+(28, 1, 16, '2024-01-27', 220.00, 'Transfered'),
+(29, 4, 16, '2024-05-21', 450.00, 'Paypal'),
+(30, 3, 17, '2024-02-03', 550.00, 'Unseccessful'),
+(31, 7, 17, '2024-02-22', 330.00, 'Cash'),
+(32, 6, 17, '2024-07-24', 700.00, 'Transfered'),
+(33, 3, 18, '2024-09-02', 550.00, 'Paypal'),
+(34, 5, 18, '2024-10-29', 450.00, 'Cash'),
+(35, 6, 18, '2024-11-10', 600.00, 'Transfered'),
+(36, 1, 19, '2024-06-17', 220.00, 'Paypal'),
+(37, 2, 19, '2024-09-27', 480.00, 'Unseccessful'),
+(38, 1, 20, '2024-06-24', 220.00, 'Cash'),
+(39, 6, 20, '2024-08-07', 700.00, 'Transfered'),
+(40, 2, 21, '2024-02-18', 480.00, 'Paypal'),
+(41, 6, 21, '2024-04-10', 700.00, 'Pending'),
+(42, 2, 22, '2024-04-06', 480.00, 'Cash'),
+(43, 3, 22, '2024-06-08', 550.00, 'Transfered'),
+(44, 7, 22, '2024-10-21', 330.00, 'Paypal'),
+(45, 1, 23, '2024-02-13', 220.00, 'Unseccessful'),
+(46, 1, 24, '2024-05-08', 220.00, 'Cash'),
+(47, 4, 24, '2024-08-24', 450.00, 'Transfered'),
+(48, 5, 24, '2024-09-30', 600.00, 'Paypal'),
+(49, 2, 25, '2024-03-12', 480.00, 'Pending'),
+(50, 3, 25, '2024-03-31', 550.00, 'Cash'),
+(51, 4, 25, '2024-06-28', 450.00, 'Transfered');
+
+
+-- Equipment TABLE
+ INSERT INTO Equipment (EquipmentName, Quantity, Condition, ClassRoomID)
+VALUES 
+    ('Speaker', 2, 'OK',1),
+    ('Monitor', 15, 'Repaired',2),
+    ('Case', 15, 'Repaired',1),
+    ('Atlas', 15, 'Repaired',3),
+    ('Map', 15, 'Repaired',4),   
+	('Model', 8, 'Damaged',2),
+    ('Car', 2, 'New',3),
+    ('Speaker2', 12, 'OK',4),
+    ('Playstation', 5, 'OK',2),
+    ('Chess', 5, 'New',1),
+    ('Tablet', 10, 'OK',4),
+    ('Paper', 10, 'OK',3),
+    ('Coffee', 5, 'OK',3),
+    ('Oven', 3, 'c',2),
+	('Car', 2, 'New',3),
+    ('Speaker2', 12, 'Missed',4),
+    ('Playstation', 5, 'OK',2),
+    ('Chess', 5, 'New',1),
+    ('Tablet', 10, 'OK',4),
+    ('Paper', 10, 'OK',3),
+    ('Coffee', 5, 'OK',3),
+    ('Oven', 3, 'Damaged',2),
+    ('Mouse', 25, 'Missed',1);
+
+UPDATE Equipment SET Condition = &quot;Missed&quot;, Quantity = 6 WHERE EquipmentID = 3;
+UPDATE Equipment SET Condition = &quot;Damaged&quot;  WHERE EquipmentID = 7;
+UPDATE Equipment SET ClassRoomID = 3  WHERE EquipmentID = 5;
+UPDATE Mentor SET name = &quot;Michel Angelo&quot;, Specialization = &quot;Classic art and creativity&quot; WHERE InstructorID = 3;
+
+
+
+	
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
